@@ -16,4 +16,4 @@ Provides extract to variable and extract to method functionality for Brackets vi
 
 ##Instructions
 
-Highlight a section of code, right click, and select extract. In the dialog that opens, specify the variable or function name and the destination location.
+Highlight a section of code, right click, and select extract. In the dialog that opens, specify the variable or function name and the type. If you have any issues, questions, or suggestions for more features, please open a github issue here.
