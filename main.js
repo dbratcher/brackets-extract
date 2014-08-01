@@ -14,7 +14,8 @@ define(function (require, exports, module) {
     Editor = brackets.getModule("editor/Editor").Editor,
     Dialogs = brackets.getModule("widgets/Dialogs"),
     DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
-    DocumentManager = brackets.getModule("document/DocumentManager");
+    DocumentManager = brackets.getModule("document/DocumentManager"),
+    Strings = require("i18n!nls/strings");
 
   var COMMAND_ID = "me.drewbratcher.extract",
     CONTEXTUAL_COMMAND_ID = "me.drewbratcher.extractContextual";
@@ -115,7 +116,7 @@ define(function (require, exports, module) {
   menu.addMenuDivider();
   menu.addMenuItem(COMMAND_ID, command);
 
-  CommandManager.register("Beautify", CONTEXTUAL_COMMAND_ID, extract);
+  CommandManager.register(Strings.COMMAND_NAME, CONTEXTUAL_COMMAND_ID, extract);
   var contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
   contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID);
 
