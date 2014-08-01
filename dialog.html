@@ -1,0 +1,47 @@
+<div class="brackets-extract-dialog modal">
+  <div class="modal-header">
+    <h1 class="dialog-title">Extract Refactoring</h1>
+  </div>
+  <div class="modal-body" style="margin-left:40px">
+    <div class="row" style="text-align:left">
+      <div style="display:inline-block;width:200px;text-align:right">
+        New Name:
+      </div>
+      <div style="display:inline-block;width:200px;text-align:left;margin-left:10px">
+        <input id="newName" type="text" value="extracted">
+      </div>
+    </div>
+    <hr/>
+    <div class="row" style="text-align:left">
+      <div style="display:inline-block;width:200px;text-align:right;vertical-align:top;">
+        Extract To:
+        <br/>
+      </div>
+      <div style="display:inline-block;width:200px;text-align:left">
+        <span style='margin:10px'><input id="varOrFunc" type="radio" name="varOrFunc" value="variable" checked/></span>
+        Variable
+        <br/>
+        <span style='margin:10px'><input id="varOrFunc" type="radio" name="varOrFunc" value="function" /></span>
+        Function
+      </div>
+    </div>
+    <hr/>
+    <div class="row" style="text-align:left">
+      <div style="display:inline-block;width:200px;text-align:right;vertical-align:top;">
+        Replace:
+        <br/>
+      </div>
+      <div style="display:inline-block;width:200px;text-align:left">
+        <span style='margin:10px'><input id="replace" type="radio" name="replace" value="All" checked/></span>
+        All Instances
+        <br/>
+        <span style='margin:10px'><input id="replace" type="radio" name="replace" value="Just Selected" /></span>
+        Just Selected
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <a class="dialog-button btn cancel" data-button-id="cancel">Cancel</a>
+    <a class="dialog-button btn primary save" data-button-id="save">Extract</a>
+  </div>
+</div>
