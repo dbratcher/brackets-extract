@@ -1,28 +1,28 @@
 <div class="brackets-extract-dialog modal">
   <div class="modal-header">
-    <h1 class="dialog-title">Extract Refactoring</h1>
+    <h1 class="dialog-title">{{Strings.DIALOG_TITLE}}</h1>
   </div>
   <div class="modal-body" style="margin-left:40px">
     <div class="row" style="text-align:left">
       <div style="display:inline-block;width:200px;text-align:right">
-        New Name:
+        {{Strings.DIALOG_LABEL_NEW_NAME}}:
       </div>
       <div style="display:inline-block;width:200px;text-align:left;margin-left:10px">
-        <input id="newName" type="text" value="extracted">
+        <input id="newName" type="text" value="{{Strings.DIALOG_INPUT_PLACEHOLDER}}">
       </div>
     </div>
     <hr/>
     <div class="row" style="text-align:left">
       <div style="display:inline-block;width:200px;text-align:right;vertical-align:top;">
-        Extract To:
+        {{Strings.DIALOG_LABEL_EXTRACT_TO}}:
         <br/>
       </div>
       <div style="display:inline-block;width:200px;text-align:left">
         <span style='margin:10px'><input id="varOrFunc" type="radio" name="varOrFunc" value="variable" checked/></span>
-        Variable
+        {{Strings.DIALOG_LABEL_VARIABLE}}
         <br/>
         <span style='margin:10px'><input id="varOrFunc" type="radio" name="varOrFunc" value="function" /></span>
-        Function
+        {{Strings.DIALOG_LABEL_FUNCTION}}
       </div>
     </div>
     <!--<hr/>
@@ -41,7 +41,7 @@
   </div>-->
   </div>
   <div class="modal-footer">
-    <a class="dialog-button btn cancel" data-button-id="cancel">Cancel</a>
-    <a class="dialog-button btn primary save" data-button-id="save">Extract</a>
+    <a class="dialog-button btn cancel" data-button-id="cancel">{{BracketsStrings.CANCEL}}</a>
+    <a class="dialog-button btn primary save" data-button-id="save">{{Strings.COMMAND_NAME}}</a>
   </div>
 </div>

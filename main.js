@@ -1,5 +1,5 @@
 /*jslint vars: true, plusplus: true, devel: true, nomen: true, regexp: true, indent: 4, maxerr: 50 */
-/*global define, $, brackets */
+/*global define, $, brackets, Mustache */
 
 /** {brackets-extract} Extract Refactoring for Brackets
     Provides extract to variable and extract to method functionality for Brackets via an extension.
@@ -15,12 +15,17 @@ define(function (require, exports, module) {
     Dialogs = brackets.getModule("widgets/Dialogs"),
     DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
     DocumentManager = brackets.getModule("document/DocumentManager"),
-    Strings = require("i18n!nls/strings");
+    Strings = require("i18n!nls/strings"),
+    BracketsStrings = brackets.getModule("i18n!nls/strings");
 
   var COMMAND_ID = "me.drewbratcher.extract",
     CONTEXTUAL_COMMAND_ID = "me.drewbratcher.extractContextual";
 
   var dialog = require("text!dialog.html");
+  var templateVars = {
+      BracketsStrings: BracketsStrings,
+      Strings: Strings
+  };
 
   function extract() {
     var unformattedText;
@@ -30,7 +35,7 @@ define(function (require, exports, module) {
     if (selectedText.length > 0) {
       unformattedText = selectedText;
     } else {
-      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, "Extract Refactoring Error", "You must highlight some code for extraction.");
+      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, Strings.DIALOG_ERROR_TITLE, Strings.DIALOG_ERROR_NO_SELECTION);
       return;
     }
 
@@ -42,7 +47,7 @@ define(function (require, exports, module) {
     switch (fileType) {
 
     case 'javascript':
-      var openedDialog = Dialogs.showModalDialogUsingTemplate(dialog);
+      var openedDialog = Dialogs.showModalDialogUsingTemplate(Mustache.render(dialog, templateVars));
       var $dom = openedDialog.getElement();
       $dom.find('#newName').select();
       openedDialog.done(function (id) {
@@ -70,7 +75,7 @@ define(function (require, exports, module) {
       });
       break;
     default:
-      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, "Extract Refactoring Error", "Unsupported File: Must be Javascript.");
+      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, Strings.DIALOG_ERROR_TITLE, Strings.DIALOG_ERROR_UNSUPPORTED_FILE);
       return;
     }
   }
@@ -97,7 +102,7 @@ define(function (require, exports, module) {
     });
   }
 
-  CommandManager.register("Extract", COMMAND_ID, extract);
+  CommandManager.register(Strings.COMMAND_NAME, COMMAND_ID, extract);
 
   var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
 
