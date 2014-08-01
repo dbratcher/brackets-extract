@@ -22,27 +22,14 @@ define(function (require, exports, module) {
   var dialog = require("text!dialog.html");
 
   function extract() {
-    var indentChar, indentSize, formattedText;
-    var unformattedText, isSelection = false;
-    var useTabs = Editor.getUseTabChar();
-
-    if (useTabs) {
-      indentChar = '\t';
-      indentSize = 1;
-    } else {
-      indentChar = ' ';
-      indentSize = Editor.getSpaceUnits();
-    }
-
+    var unformattedText;
     var editor = EditorManager.getCurrentFullEditor();
     var selectedText = editor.getSelectedText();
-    var selection = editor.getSelection();
 
     if (selectedText.length > 0) {
-      isSelection = true;
       unformattedText = selectedText;
     } else {
-      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, "Extract Refactoring Error", "You must highligh some code for extraction.");
+      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, "Extract Refactoring Error", "You must highlight some code for extraction.");
       return;
     }
 
@@ -54,14 +41,59 @@ define(function (require, exports, module) {
     switch (fileType) {
 
     case 'javascript':
-      Dialogs.showModalDialogUsingTemplate(dialog).done(function (id) {
-        console.log(id);
+      var openedDialog = Dialogs.showModalDialogUsingTemplate(dialog);
+      var $dom = openedDialog.getElement();
+      $dom.find('#newName').select();
+      openedDialog.done(function (id) {
+        if (id == "save") {
+          var newName = $dom.find("#newName").val();
+          var varOrFunc = $dom.find("#varOrFunc:checked").val();
+          //var replace = $dom.find("#replace").val();
+          newName = newName.trim();
+          unformattedText = unformattedText.trim();
+          if (unformattedText.substr(unformattedText.length - 1) != ';') {
+            unformattedText = unformattedText + ';';
+          }
+          var newText;
+          if (varOrFunc == 'variable') {
+            newText = "var " + newName + " = " + unformattedText + "\n";
+          } else {
+            newName = newName + '()';
+            newText = [
+              "function " + newName + " {",
+              unformattedText,
+              "}"];
+          }
+          performExtraction(newName, newText);
+        }
       });
       break;
     default:
       Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, "Extract Refactoring Error", "Unsupported File: Must be Javascript.");
       return;
     }
+  }
+
+  function performExtraction(newName, newText) {
+    var editor = EditorManager.getCurrentFullEditor(),
+      cursor = editor.getCursorPos(),
+      scroll = editor.getScrollPos(),
+      doc = DocumentManager.getCurrentDocument(),
+      selection = editor.getSelection();
+    var originalLine = doc.getLine(selection.start.line);
+    var lineText = originalLine.trimLeft();
+    var numSpaces = originalLine.length - lineText.length;
+    var indent = originalLine.substr(0, numSpaces);
+
+    if (newText instanceof Array) {
+      newText = newText.join('\n' + indent) + '\n';
+    }
+    doc.batchOperation(function () {
+      doc.replaceRange(newName, selection.start, selection.end);
+      var newStart = selection.start;
+      newStart.ch = 0;
+      doc.replaceRange(indent + newText, newStart, newStart);
+    });
   }
 
   CommandManager.register("Extract", COMMAND_ID, extract);
