@@ -3,7 +3,7 @@
   "title": "Extract Refactoring",
   "description": "Provides extract to variable and extract to method functionality for Brackets via an extension.",
   "homepage": "https://github.com/dbratcher/brackets-extract",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Drew Bratcher",
   "license": "MIT",
   "engines": {
