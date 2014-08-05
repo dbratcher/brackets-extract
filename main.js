@@ -9,21 +9,21 @@ define(function (require, exports, module) {
   'use strict';
 
   var CommandManager = brackets.getModule("command/CommandManager"),
-    Menus = brackets.getModule("command/Menus"),
-    EditorManager = brackets.getModule("editor/EditorManager"),
-    Editor = brackets.getModule("editor/Editor").Editor,
-    Dialogs = brackets.getModule("widgets/Dialogs"),
-    DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
-    Strings = require("i18n!nls/strings"),
-    BracketsStrings = brackets.getModule("i18n!nls/strings");
+      Menus = brackets.getModule("command/Menus"),
+      EditorManager = brackets.getModule("editor/EditorManager"),
+      Editor = brackets.getModule("editor/Editor").Editor,
+      Dialogs = brackets.getModule("widgets/Dialogs"),
+      DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
+      Strings = require("i18n!nls/strings"),
+      BracketsStrings = brackets.getModule("i18n!nls/strings");
 
   var COMMAND_ID = "me.drewbratcher.extract",
-    CONTEXTUAL_COMMAND_ID = "me.drewbratcher.extractContextual";
+      CONTEXTUAL_COMMAND_ID = "me.drewbratcher.extractContextual";
 
   var dialog = require("text!dialog.html");
   var templateVars = {
-      BracketsStrings: BracketsStrings,
-      Strings: Strings
+    BracketsStrings: BracketsStrings,
+    Strings: Strings
   };
 
   function extract() {
@@ -60,7 +60,8 @@ define(function (require, exports, module) {
             newText = [
               "function " + newName + " {",
               unformattedText,
-              "}"];
+              "}"
+            ];
           }
           performExtraction(newName, newText);
         }
@@ -73,10 +74,10 @@ define(function (require, exports, module) {
 
   function performExtraction(newName, newText) {
     var editor = EditorManager.getCurrentFullEditor(),
-      cursor = editor.getCursorPos(),
-      scroll = editor.getScrollPos(),
-      doc = editor.document,
-      selection = editor.getSelection();
+        cursor = editor.getCursorPos(),
+        scroll = editor.getScrollPos(),
+        doc = editor.document,
+        selection = editor.getSelection();
     var originalLine = doc.getLine(selection.start.line);
     var lineText = originalLine.trimLeft();
     var numSpaces = originalLine.length - lineText.length;
