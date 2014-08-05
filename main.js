@@ -14,7 +14,6 @@ define(function (require, exports, module) {
     Editor = brackets.getModule("editor/Editor").Editor,
     Dialogs = brackets.getModule("widgets/Dialogs"),
     DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
-    DocumentManager = brackets.getModule("document/DocumentManager"),
     Strings = require("i18n!nls/strings"),
     BracketsStrings = brackets.getModule("i18n!nls/strings");
 
@@ -39,12 +38,7 @@ define(function (require, exports, module) {
       return;
     }
 
-    var doc = DocumentManager.getCurrentDocument();
-
-    var language = doc.getLanguage();
-    var fileType = language._id;
-
-    switch (fileType) {
+    switch (editor.document.language.getId()) {
 
     case 'javascript':
       var openedDialog = Dialogs.showModalDialogUsingTemplate(Mustache.render(dialog, templateVars));
@@ -84,7 +78,7 @@ define(function (require, exports, module) {
     var editor = EditorManager.getCurrentFullEditor(),
       cursor = editor.getCursorPos(),
       scroll = editor.getScrollPos(),
-      doc = DocumentManager.getCurrentDocument(),
+      doc = editor.document,
       selection = editor.getSelection();
     var originalLine = doc.getLine(selection.start.line);
     var lineText = originalLine.trimLeft();
