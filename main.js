@@ -38,9 +38,7 @@ define(function (require, exports, module) {
       return;
     }
 
-    switch (editor.document.language.getId()) {
-
-    case 'javascript':
+    if (editor.document.language.getId() === "javascript") {
       var openedDialog = Dialogs.showModalDialogUsingTemplate(Mustache.render(dialog, templateVars));
       var $dom = openedDialog.getElement();
       $dom.find('#newName').select();
@@ -67,10 +65,9 @@ define(function (require, exports, module) {
           performExtraction(newName, newText);
         }
       });
-      break;
-    default:
-      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, Strings.DIALOG_ERROR_TITLE, Strings.DIALOG_ERROR_UNSUPPORTED_FILE);
-      return;
+    } else {
+        Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, Strings.DIALOG_ERROR_TITLE, Strings.DIALOG_ERROR_UNSUPPORTED_FILE);
+        return;
     }
   }
 
