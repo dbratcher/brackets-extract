@@ -9,22 +9,21 @@ define(function (require, exports, module) {
   'use strict';
 
   var CommandManager = brackets.getModule("command/CommandManager"),
-    Menus = brackets.getModule("command/Menus"),
-    EditorManager = brackets.getModule("editor/EditorManager"),
-    Editor = brackets.getModule("editor/Editor").Editor,
-    Dialogs = brackets.getModule("widgets/Dialogs"),
-    DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
-    DocumentManager = brackets.getModule("document/DocumentManager"),
-    Strings = require("i18n!nls/strings"),
-    BracketsStrings = brackets.getModule("i18n!nls/strings");
+      Menus = brackets.getModule("command/Menus"),
+      EditorManager = brackets.getModule("editor/EditorManager"),
+      Editor = brackets.getModule("editor/Editor").Editor,
+      Dialogs = brackets.getModule("widgets/Dialogs"),
+      DefaultDialogs = brackets.getModule("widgets/DefaultDialogs"),
+      Strings = require("i18n!nls/strings"),
+      BracketsStrings = brackets.getModule("i18n!nls/strings");
 
   var COMMAND_ID = "me.drewbratcher.extract",
-    CONTEXTUAL_COMMAND_ID = "me.drewbratcher.extractContextual";
+      CONTEXTUAL_COMMAND_ID = "me.drewbratcher.extractContextual";
 
   var dialog = require("text!dialog.html");
   var templateVars = {
-      BracketsStrings: BracketsStrings,
-      Strings: Strings
+    BracketsStrings: BracketsStrings,
+    Strings: Strings
   };
 
   function extract() {
@@ -39,14 +38,7 @@ define(function (require, exports, module) {
       return;
     }
 
-    var doc = DocumentManager.getCurrentDocument();
-
-    var language = doc.getLanguage();
-    var fileType = language._id;
-
-    switch (fileType) {
-
-    case 'javascript':
+    if (editor.document.language.getId() === "javascript") {
       var openedDialog = Dialogs.showModalDialogUsingTemplate(Mustache.render(dialog, templateVars));
       var $dom = openedDialog.getElement();
       $dom.find('#newName').select();
@@ -68,24 +60,24 @@ define(function (require, exports, module) {
             newText = [
               "function " + newName + " {",
               unformattedText,
-              "}"];
+              "}"
+            ];
           }
           performExtraction(newName, newText);
         }
       });
-      break;
-    default:
-      Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, Strings.DIALOG_ERROR_TITLE, Strings.DIALOG_ERROR_UNSUPPORTED_FILE);
-      return;
+    } else {
+        Dialogs.showModalDialog(DefaultDialogs.DIALOG_ID_ERR, Strings.DIALOG_ERROR_TITLE, Strings.DIALOG_ERROR_UNSUPPORTED_FILE);
+        return;
     }
   }
 
   function performExtraction(newName, newText) {
     var editor = EditorManager.getCurrentFullEditor(),
-      cursor = editor.getCursorPos(),
-      scroll = editor.getScrollPos(),
-      doc = DocumentManager.getCurrentDocument(),
-      selection = editor.getSelection();
+        cursor = editor.getCursorPos(),
+        scroll = editor.getScrollPos(),
+        doc = editor.document,
+        selection = editor.getSelection();
     var originalLine = doc.getLine(selection.start.line);
     var lineText = originalLine.trimLeft();
     var numSpaces = originalLine.length - lineText.length;
