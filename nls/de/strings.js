@@ -17,6 +17,6 @@ define({
   "PROMPT_LABEL_YES": "Ja",
   "PROMPT_LABEL_NO": "Nein",
   "PROMPT_LABEL_YES_TO_REST": "Ja zum Rest",
-  "PROMPT_LABEL_NO_TO_REST": "Nicht Mehr",
+  "PROMPT_LABEL_NO_TO_REST": "Abbrechen",
   "PROMPT_TITLE": "Diese Instanz extrahieren?"
 });
