@@ -11,12 +11,12 @@ define({
   "DIALOG_LABEL_REPLACE": "Ersetzen",
   "DIALOG_LABEL_TEXT": "Ausgewählte Sprache",
   "DIALOG_LABEL_ALL": "Alle Instanzen",
-  "DIALOG_LABEL_SELECT": "Wählen Instanzen",
+  "DIALOG_LABEL_SELECT": "Instanzen auswählen",
   "DIALOG_TITLE": "Extrahieren",
   "PROMPT_LABEL_INSTANCE": "Instanzen",
   "PROMPT_LABEL_YES": "Ja",
   "PROMPT_LABEL_NO": "Nein",
-  "PROMPT_LABEL_YES_TO_REST": "Ja Zur Ruhe",
+  "PROMPT_LABEL_YES_TO_REST": "Ja zum Rest",
   "PROMPT_LABEL_NO_TO_REST": "Nicht Mehr",
-  "PROMPT_TITLE": "Extrahieren diese instanz?"
+  "PROMPT_TITLE": "Diese Instanz extrahieren?"
 });
