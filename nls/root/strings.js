@@ -12,5 +12,11 @@ define({
   "DIALOG_LABEL_TEXT": "Selected Text",
   "DIALOG_LABEL_ALL": "All Instances",
   "DIALOG_LABEL_SELECT": "Select Instances",
-  "DIALOG_TITLE": "Extract Refactoring"
-});
+  "DIALOG_TITLE": "Extract Refactoring",
+  "PROMPT_LABEL_INSTANCE": "Instance",
+  "PROMPT_LABEL_YES": "Yes",
+  "PROMPT_LABEL_NO": "No",
+  "PROMPT_LABEL_YES_TO_REST": "Yes to Rest",
+  "PROMPT_LABEL_NO_TO_REST": "No to Rest",
+  "PROMPT_TITLE": "Extract this instance?"
+}); 
