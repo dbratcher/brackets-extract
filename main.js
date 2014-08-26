@@ -194,20 +194,8 @@ define(function (require, exports, module) {
 
   var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
 
-  var windowsCommand = {
-    key: "Ctrl-Shift-E",
-    platform: "win"
-  };
-
-  var macCommand = {
-    key: "Cmd-Shift-E",
-    platform: "mac"
-  };
-
-  var command = [windowsCommand, macCommand];
-
   menu.addMenuDivider();
-  menu.addMenuItem(COMMAND_ID, command);
+  menu.addMenuItem(COMMAND_ID, "Ctrl-Shift-E");
 
   CommandManager.register(Strings.COMMAND_NAME, CONTEXTUAL_COMMAND_ID, extract);
   var contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
