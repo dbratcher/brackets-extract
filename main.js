@@ -52,7 +52,7 @@ define(function (require, exports, module) {
           //var replace = $dom.find("#replace").val();
           newName = newName.trim();
           unformattedText = unformattedText.trim();
-          if (unformattedText.substr(unformattedText.length - 1) != ';') {
+          if (unformattedText.charAt(unformattedText.length - 1) != ';') {
             unformattedText = unformattedText + ';';
           }
           var newText;
