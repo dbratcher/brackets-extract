@@ -28,37 +28,50 @@ define(function (require, exports, module) {
     Strings: Strings
   };
 
+  function splitPieces(pieces, char) {
+    var newPieces = [];
+    pieces.forEach(function(piece) {
+      newPieces = newPieces.concat(piece.split(char));
+    });
+    return newPieces;
+  }
+
   function extractVariables(text) {
     // ignore comments
     text = text.replace(/\/\/.+\n/g, '');
     text = text.replace(/\/\*.+\*\//g, '');
+
     // ignore quotes
     text = text.replace(/['].+[']/g, '');
     text = text.replace(/["].+["]/g, '');
-    // look at the first part of blocks
+
+    // remove properties
+    text = text.replace(/\.[a-z0-9]+/i, '');
+
+    // break blocks into words
     var blocks = text.split(' ');
-    var words = [];
-    blocks.forEach(function(block) {
-      words = words.concat(block.split('.'));
-    });
+    blocks = splitPieces(blocks, '.');
+    blocks = splitPieces(blocks, '[');
+    blocks = splitPieces(blocks, ']');
+
     // filter alphanumerics
-    words = words.filter(function(word) {
+    blocks = blocks.filter(function(word) {
       return word.match(/^[a-z0-9]+$/i);
     });
     // ignore language specifics
-    words = words.filter(function(word) {
+    blocks = blocks.filter(function(word) {
       return ((word !== 'console') && (word !== 'delete'));
     });
     // check what's defined
     var defined = [];
-    for(var i = 0; i<words.length; i++) {
-      if(words[i-1] && words[i-1]=='var') {
-        defined.push(words[i]);
+    for(var i = 0; i<blocks.length; i++) {
+      if(blocks[i-1] && blocks[i-1]=='var') {
+        defined.push(blocks[i]);
       }
     }
     // uniquely specify params
     var params = [];
-    words.forEach(function(word) {
+    blocks.forEach(function(word) {
       if(defined.indexOf(word)==-1 && params.indexOf(word)==-1 && word !='var') {
         params.push(word);
       }
