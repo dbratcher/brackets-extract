@@ -28,6 +28,44 @@ define(function (require, exports, module) {
     Strings: Strings
   };
 
+  function extractVariables(text) {
+    // ignore comments
+    text = text.replace(/\/\/.+\n/g, '');
+    text = text.replace(/\/\*.+\*\//g, '');
+    // ignore quotes
+    text = text.replace(/['].+[']/g, '');
+    text = text.replace(/["].+["]/g, '');
+    // look at the first part of blocks
+    var blocks = text.split(' ');
+    var words = [];
+    blocks.forEach(function(block) {
+      words = words.concat(block.split('.'));
+    });
+    // filter alphanumerics
+    words = words.filter(function(word) {
+      return word.match(/^[a-z0-9]+$/i);
+    });
+    // ignore language specifics
+    words = words.filter(function(word) {
+      return ((word !== 'console') && (word !== 'delete'));
+    });
+    // check what's defined
+    var defined = [];
+    for(var i = 0; i<words.length; i++) {
+      if(words[i-1] && words[i-1]=='var') {
+        defined.push(words[i]);
+      }
+    }
+    // uniquely specify params
+    var params = [];
+    words.forEach(function(word) {
+      if(defined.indexOf(word)==-1 && params.indexOf(word)==-1 && word !='var') {
+        params.push(word);
+      }
+    });
+    return params;
+  }
+
   function extract() {
     var unformattedText;
     var editor = EditorManager.getCurrentFullEditor();
@@ -59,9 +97,10 @@ define(function (require, exports, module) {
           if (varOrFunc == 'variable') {
             newText = "var " + newName + " = " + unformattedText + "\n";
           } else {
-            newName = newName + '()';
             // add function indent
             unformattedText = '  ' + unformattedText.split('\n').join('\n  ');
+            var params = extractVariables(unformattedText);
+            newName = newName + '('+params.join(', ')+')';
             newText = [
               "function " + newName + " {",
               unformattedText,
@@ -76,13 +115,13 @@ define(function (require, exports, module) {
       return;
     }
   }
-  
+
   var confirmBar = null;
   var lastLineReplaced = 0;
   function askQuestions(editor, doc, selections, i, newText) {
     if(i>=selections.length) {
-      confirmBar.close(false, false)
-      confirmBar = null
+      confirmBar.close(false, false);
+      confirmBar = null;
       return;
     }
     if (confirmBar === null) {
@@ -112,34 +151,35 @@ define(function (require, exports, module) {
           doc.replaceRange(newText, instance1.start, instance1.end);
         });
       } else if(button == 'extract-no-all') {
-        confirmBar.close(false, false)
-        confirmBar = null
+        confirmBar.close(false, false);
+        confirmBar = null;
       }
     });
   }
-  
+
   function positionToSelection(pos, fileText, length) {
     // truncate file to position
     var truncated = fileText.substring(0, pos);
     // count line endings
     var lines = (truncated.match(/\n/g)||[]).length;
     // get char offset since last line ending
-    var chars = truncated.length - truncated.lastIndexOf('\n') - 1; 
-    
+    var chars = truncated.length - truncated.lastIndexOf('\n') - 1;
+
     var begin = { ch: chars, line: lines};
     var stop = { ch: chars, line: lines};
     stop.ch += length;
     var selection = {start: begin, end: stop};
     return selection;
   }
-  
+
   // returns array of {start, end} objects given regex word and file text fileText
   function findInstances(word, fileText) {
     var matches = [];
-    var found = false;
     var reg = new RegExp(word, 'g');
-    while(found = reg.exec(fileText)) {
+    var found = reg.exec(fileText);
+    while(found) {
       matches.push(positionToSelection(found.index, fileText, found[0].length));
+      found = reg.exec(fileText);
     }
     return matches;
   }
@@ -153,12 +193,12 @@ define(function (require, exports, module) {
     var lineText = originalLine.trimLeft();
     var numSpaces = originalLine.length - lineText.length;
     var indent = originalLine.substr(0, numSpaces);
-    
+
 
     if (newText instanceof Array) {
       newText = newText.join('\n' + indent) + '\n';
     }
-    
+
     doc.batchOperation(function () {
 
       var newStart = {ch:selection.start.ch, line:selection.start.line};
@@ -182,8 +222,8 @@ define(function (require, exports, module) {
             lastLineReplaced = instance.start.line;
             var extracted = instance.start;
             doc.replaceRange(newName, instance.start, instance.end);
-              
-          }); 
+
+          });
         }
       }
       doc.replaceRange(indent + newText, newStart, newStart);
