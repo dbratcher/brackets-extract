@@ -53,15 +53,19 @@ define(function (require, exports, module) {
     blocks = splitPieces(blocks, '.');
     blocks = splitPieces(blocks, '[');
     blocks = splitPieces(blocks, ']');
+    blocks = splitPieces(blocks, ';');
+    blocks = splitPieces(blocks, ',');
 
     // filter alphanumerics
     blocks = blocks.filter(function(word) {
-      return word.match(/^[a-z0-9]+$/i);
+      return word.match(/^[a-z][a-z0-9]+$/i);
     });
+
     // ignore language specifics
     blocks = blocks.filter(function(word) {
-      return ((word !== 'console') && (word !== 'delete'));
+      return ((word !== 'console') && (word !== 'delete') && (word !== 'throw') && (word !== 'return'));
     });
+
     // check what's defined
     var defined = [];
     for(var i = 0; i<blocks.length; i++) {
@@ -119,6 +123,17 @@ define(function (require, exports, module) {
               unformattedText,
               "}"
             ];
+            // check if need semicolon
+            var trimmedText = unformattedText.trim();
+            if(trimmedText[trimmedText.length-1] == ';') {
+              newName += ';';
+            }
+            // check if return in last line
+            var lines = unformattedText.split('\n');
+            var lastLine = lines[lines.length-1];
+            if(lastLine.indexOf('return')!=-1) {
+              newName = 'return ' + newName;
+            }
           }
           performExtraction(newName, newText, replace);
         }
