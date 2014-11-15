@@ -1,9 +1,9 @@
 {
-  "name": "brackets-extract-refactoring",
+  "name": "brackets-extract",
   "title": "Extract Refactoring",
   "description": "Provides extract to variable and extract to method functionality for Brackets via an extension.",
   "homepage": "https://github.com/dbratcher/brackets-extract",
-  "version": "1.3.2",
+  "version": "1.4.0",
   "author": "Drew Bratcher",
   "license": "MIT",
   "engines": {
