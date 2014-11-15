@@ -1,5 +1,5 @@
 {
-  "name": "brackets-extract",
+  "name": "brackets-extract-refactoring",
   "title": "Extract Refactoring",
   "description": "Provides extract to variable and extract to method functionality for Brackets via an extension.",
   "homepage": "https://github.com/dbratcher/brackets-extract",

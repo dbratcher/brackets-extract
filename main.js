@@ -8,6 +8,8 @@
 define(function (require, exports, module) {
   'use strict';
 
+  exports.extractVariables = extractVariables;
+
   var CommandManager = brackets.getModule("command/CommandManager"),
     Menus = brackets.getModule("command/Menus"),
     EditorManager = brackets.getModule("editor/EditorManager"),
@@ -37,6 +39,7 @@ define(function (require, exports, module) {
   }
 
   function extractVariables(text) {
+    //console.log(text);
     // ignore comments
     text = text.replace(/\/\/.+\n/g, '');
     text = text.replace(/\/\*.+\*\//g, '');
@@ -46,7 +49,8 @@ define(function (require, exports, module) {
     text = text.replace(/["].+["]/g, '');
 
     // remove properties
-    text = text.replace(/\.[a-z0-9]+/i, '');
+    text = text.replace(/\.[a-z0-9\.]+/i, '');
+    //console.log(text);
 
     // break blocks into words
     var blocks = text.split(' ');
@@ -57,16 +61,26 @@ define(function (require, exports, module) {
     blocks = splitPieces(blocks, ',');
 
     // filter alphanumerics
+    //console.log(blocks);
     blocks = blocks.filter(function(word) {
-      return word.match(/^[a-z][a-z0-9]+$/i);
+      return word.match(/^[a-z][a-z0-9]*$/i);
     });
 
     // ignore language specifics
+    var lang = ['console', 'delete', 'throw', 'return', 'break', 'case',
+                'class', 'catch', 'const', 'continue', 'debugger',
+                'default', 'delete', 'do', 'else', 'export', 'extends',
+                'finally', 'for', 'function', 'if', 'import', 'in',
+                'instanceof', 'let', 'new', 'return', 'super',
+                'switch', 'this', 'throw', 'try', 'typeof', 'void',
+                'while', 'with', 'yield' ];
+
     blocks = blocks.filter(function(word) {
-      return ((word !== 'console') && (word !== 'delete') && (word !== 'throw') && (word !== 'return'));
+      return lang.indexOf(word)==-1;
     });
 
     // check what's defined
+    //console.log(blocks);
     var defined = [];
     for(var i = 0; i<blocks.length; i++) {
       if(blocks[i-1] && blocks[i-1]=='var') {
@@ -74,12 +88,14 @@ define(function (require, exports, module) {
       }
     }
     // uniquely specify params
+    //console.log(defined, blocks);
     var params = [];
     blocks.forEach(function(word) {
       if(defined.indexOf(word)==-1 && params.indexOf(word)==-1 && word !='var') {
         params.push(word);
       }
     });
+    //console.log(params);
     return params;
   }
 
@@ -262,11 +278,15 @@ define(function (require, exports, module) {
 
   var menu = Menus.getMenu(Menus.AppMenuBar.EDIT_MENU);
 
-  menu.addMenuDivider();
-  menu.addMenuItem(COMMAND_ID, "Ctrl-Shift-E");
-
-  CommandManager.register(Strings.COMMAND_NAME, CONTEXTUAL_COMMAND_ID, extract);
-  var contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
-  contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID);
+  if(!menu) {
+    console.log('brackets extract refactoring is in testing mode');
+  } else {
+    menu.addMenuDivider();
+    menu.addMenuItem(COMMAND_ID, "Ctrl-Shift-E");
+    CommandManager.register(Strings.COMMAND_NAME, CONTEXTUAL_COMMAND_ID, extract);
+    var contextMenu = Menus.getContextMenu(Menus.ContextMenuIds.EDITOR_MENU);
+    contextMenu.addMenuItem(CONTEXTUAL_COMMAND_ID);
+  }
 
 });
+
